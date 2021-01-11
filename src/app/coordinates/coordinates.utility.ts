@@ -6,10 +6,10 @@ export interface Sexagesimal {
 }
 
 export enum SexagesimalOrientation {
-  North,
-  South,
-  East,
-  West
+  North = 'North',
+  South = 'South',
+  East = 'East',
+  West = 'West'
 }
 
 export interface SexagesimalCoordinate {

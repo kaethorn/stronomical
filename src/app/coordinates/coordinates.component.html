@@ -5,8 +5,23 @@
     <mat-card-subtitle>in degress</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <h3>
-      {{ coordinates }}
-    </h3>
+    <div *ngIf="coordinates; else noCoordinates">
+      <h4>
+        Latitude:
+        {{ coordinates.latitude.coordinate.degrees }}°,
+        {{ coordinates.latitude.coordinate.minutes }}',
+        {{ coordinates.latitude.coordinate.seconds }}"
+        {{ coordinates.latitude.orientation }}
+      </h4>
+      <h4>
+        Longitude:
+        {{ coordinates.longitude.coordinate.degrees }}°,
+        {{ coordinates.longitude.coordinate.minutes }}',
+        {{ coordinates.longitude.coordinate.seconds }}"
+        {{ coordinates.longitude.orientation }}
+      </h4>
+    </div>
+    <ng-template #noCoordinates>Locating…</ng-template>
+    <mat-error *ngIf="error.length" color="primary">{{ error }}</mat-error>
   </mat-card-content>
 </mat-card>

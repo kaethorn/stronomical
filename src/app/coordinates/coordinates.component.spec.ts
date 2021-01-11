@@ -23,14 +23,15 @@ describe('CoordinatesComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it(`should have default coordinates`, () => {
+  it(`should have no error by default`, () => {
     const app = fixture.componentInstance;
-    expect(app.coordinates).toEqual('Locating…');
+    expect(app.error).toEqual('');
   });
 
   it('should render coordinates', () => {
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('h3').textContent).toContain('Locating');
+    expect(compiled.querySelector('mat-card-content').textContent)
+      .toContain('Locating');
   });
 });
