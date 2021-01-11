@@ -82,6 +82,15 @@
         "no-undef-init": "error",
         "no-unused-expressions": "error",
         "no-var": "error",
+        "array-bracket-spacing": [
+          "error",
+          "never",
+          {
+            "objectsInArrays": false,
+            "arraysInArrays": false
+          }
+        ],
+        "switch-colon-spacing": "error",
         "prefer-template": "error",
         "template-curly-spacing": ["error", "never"]
       }

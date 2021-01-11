@@ -1,6 +1,14 @@
-<h1>Coordinates</h1>
-<p>{{ coordinates }}</p>
-<h1>UTC</h1>
-<p>{{ utc }}</p>
+<mat-toolbar color="primary">
+  <mat-icon>nights_stay</mat-icon>
+  (A)stronomical
+</mat-toolbar>
+<main>
+  <section>
+    <app-coordinates></app-coordinates>
+  </section>
+  <section>
+    <app-time></app-time>
+  </section>
+</main>
 
 <router-outlet></router-outlet>
