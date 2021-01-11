@@ -1,5 +1,6 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, NgZone } from '@angular/core';
+import { interval } from 'rxjs';
+
 import { WINDOW_TOKEN } from 'src/app/window.provider';
 
 export interface Sexagesimal {
@@ -36,12 +37,17 @@ export class AppComponent {
   public utc = new Date().toUTCString();
 
   constructor(
-    @Inject(WINDOW_TOKEN) private window: Window
+    @Inject(WINDOW_TOKEN) private window: Window,
+    private ngZone: NgZone
   ) {
-    this.locate();
-    this.window.setInterval(() => {
-      this.utc = new Date().toUTCString();
-    }, 1000);
+    this.ngZone.runOutsideAngular(() => {
+      this.locate();
+      interval(1000).subscribe(() => {
+        this.ngZone.run(() => {
+          this.utc = new Date().toUTCString();
+        });
+      });
+    });
   }
 
   public locate(): void {

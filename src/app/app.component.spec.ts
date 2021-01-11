@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { WindowProvider } from 'src/app/window.provider';
+
 import { AppComponent } from './app.component';
+
+import { WindowProvider } from 'src/app/window.provider';
 
 describe('AppComponent', () => {
   beforeEach(async () => {

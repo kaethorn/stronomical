@@ -1,0 +1,18 @@
+name: Test
+on: push
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@master
+      - name: Install Dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Unit tests
+        run: npm test -- --configuration=ci
+      - name: E2E tests
+        run: npm run e2e -- --configuration=ci
