@@ -1,18 +1,22 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { WindowProvider } from 'src/app/window.provider';
 import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       imports: [
         RouterTestingModule
       ],
       declarations: [
         AppComponent
       ],
+      providers: [
+        WindowProvider
+      ]
     }).compileComponents();
-  }));
+  });
 
   it('should create the app', () => {
     const fixture = TestBed.createComponent(AppComponent);
@@ -20,16 +24,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'stronomical'`, () => {
+  it(`should have default coordinates`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('stronomical');
+    expect(app.coordinates).toEqual('Locating…');
   });
 
-  it('should render title', () => {
+  it('should render coordinates', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('stronomical app is running!');
+    expect(compiled.querySelector('p').textContent).toContain('Locating');
   });
 });

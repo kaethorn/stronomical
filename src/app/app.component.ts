@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { WINDOW_TOKEN } from 'src/app/window.provider';
 
 export interface Sexagesimal {
   decimal: number;
@@ -8,10 +10,10 @@ export interface Sexagesimal {
 }
 
 export enum SexagesimalOrientation {
-  N,
-  S,
-  E,
-  W
+  North,
+  South,
+  East,
+  West
 }
 
 export interface SexagesimalCoordinate {
@@ -27,41 +29,42 @@ export interface SexagesimalCoordinates {
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  status = '';
-  utc = new Date().toUTCString();
+  public coordinates = 'Locating…';
+  public utc = new Date().toUTCString();
 
-  constructor() {
+  constructor(
+    @Inject(WINDOW_TOKEN) private window: Window
+  ) {
     this.locate();
-    setInterval(() => {
+    this.window.setInterval(() => {
       this.utc = new Date().toUTCString();
     }, 1000);
   }
 
-  locate() {
-    if ('geolocation' in navigator) {
-      status = 'Locating…';
-      navigator.geolocation.getCurrentPosition((position: Position) => {
+  public locate(): void {
+    if ('geolocation' in this.window.navigator) {
+      this.window.navigator.geolocation.getCurrentPosition((position: Position) => {
         const coordinates = this.toDegrees(position.coords);
-        this.status += `lat: ${ coordinates.latitude.coordinate.degrees }°, `;
-        this.status += `${ coordinates.latitude.coordinate.minutes }', `;
-        this.status += `${ coordinates.latitude.coordinate.seconds }'' `;
-        this.status += `${ SexagesimalOrientation[coordinates.latitude.orientation] }; `;
-        this.status += `lat: ${ coordinates.longitude.coordinate.degrees }°, `;
-        this.status += `${ coordinates.longitude.coordinate.minutes }', `;
-        this.status += `${ coordinates.longitude.coordinate.seconds }'' `;
-        this.status += `${ SexagesimalOrientation[coordinates.longitude.orientation] }; `;
+        this.coordinates += `Latitude: ${coordinates.latitude.coordinate.degrees}°, `;
+        this.coordinates += `${coordinates.latitude.coordinate.minutes}', `;
+        this.coordinates += `${coordinates.latitude.coordinate.seconds}'' `;
+        this.coordinates += `${SexagesimalOrientation[coordinates.latitude.orientation]}; `;
+        this.coordinates += `Longitude: ${coordinates.longitude.coordinate.degrees}°, `;
+        this.coordinates += `${coordinates.longitude.coordinate.minutes}', `;
+        this.coordinates += `${coordinates.longitude.coordinate.seconds}'' `;
+        this.coordinates += `${SexagesimalOrientation[coordinates.longitude.orientation]}; `;
       }, () => {
-        this.status = 'Unable to retrieve your location';
+        this.coordinates = 'Unable to retrieve your location';
       }, {
         enableHighAccuracy: true,
-        maximumAge        : 30000,
-        timeout           : 27000
+        maximumAge: 30000,
+        timeout: 27000
       });
     } else {
-      status = 'Geolocation is not supported by your browser';
+      this.coordinates = 'Geolocation is not supported by your browser';
     }
   }
 
@@ -69,21 +72,24 @@ export class AppComponent {
     return {
       latitude: {
         coordinate: this.toSexagesimal(coordinates.latitude),
-        orientation: (0.0 <= coordinates.latitude && coordinates.latitude <= 90.0) ?
-          SexagesimalOrientation.N : SexagesimalOrientation.S
+        orientation: coordinates.latitude >= 0 ?
+          SexagesimalOrientation.North : SexagesimalOrientation.South
       },
       longitude: {
         coordinate: this.toSexagesimal(coordinates.longitude),
-        orientation: (0.0 <= coordinates.longitude && coordinates.longitude <= 180.0) ?
-          SexagesimalOrientation.E : SexagesimalOrientation.W
+        orientation: coordinates.longitude >= 0 ?
+          SexagesimalOrientation.East : SexagesimalOrientation.West
       }
     };
   }
 
   private toSexagesimal(coordinate: number): Sexagesimal {
-    const degrees = Math.floor(coordinate);
-    const minutes = Math.floor((coordinate - degrees) * 60);
-    const seconds = (coordinate - degrees - (minutes / 60)) * 3600;
+    const absolute = Math.abs(coordinate);
+    const degrees = Math.floor(absolute);
+    const minutesNotTruncated = (absolute - degrees) * 60;
+    const minutes = Math.floor(minutesNotTruncated);
+    const seconds = Math.floor((minutesNotTruncated - minutes) * 60);
+
     return {
       decimal: coordinate,
       degrees,
