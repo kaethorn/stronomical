@@ -2,26 +2,41 @@
   <mat-card-header>
     <mat-icon mat-card-avatar>gps_fixed</mat-icon>
     <mat-card-title>Coordinates</mat-card-title>
-    <mat-card-subtitle>in degress</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <div *ngIf="coordinates; else noCoordinates">
-      <h4>
-        Latitude:
-        {{ coordinates.latitude.coordinate.degrees }}°,
-        {{ coordinates.latitude.coordinate.minutes }}',
-        {{ coordinates.latitude.coordinate.seconds }}"
-        {{ coordinates.latitude.orientation }}
-      </h4>
-      <h4>
-        Longitude:
-        {{ coordinates.longitude.coordinate.degrees }}°,
-        {{ coordinates.longitude.coordinate.minutes }}',
-        {{ coordinates.longitude.coordinate.seconds }}"
-        {{ coordinates.longitude.orientation }}
-      </h4>
-    </div>
-    <ng-template #noCoordinates>Locating…</ng-template>
-    <mat-error *ngIf="error.length" color="primary">{{ error }}</mat-error>
+    <form [formGroup]="positionForm">
+      <div>
+        <h3>Decimal</h3>
+        <mat-form-field>
+          <mat-label>Latitude</mat-label>
+          <input matInput formControlName="latitudeDecimal" (change)="convert()" required>
+          <mat-hint *ngIf="!error.length && !latitudeDecimal?.value">Locating…</mat-hint>
+          <mat-error *ngIf="latitudeDecimal?.errors?.required">
+            Latitude is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Longitude</mat-label>
+          <input matInput formControlName="longitudeDecimal" (change)="convert()" required>
+          <mat-error *ngIf="longitudeDecimal?.errors?.required">
+            Longitude is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-checkbox (change)="setUseLocation()" formControlName="useLocation" labelPosition="before">Use device location</mat-checkbox>
+        <mat-error *ngIf="error.length">{{ error }}</mat-error>
+      </div>
+
+      <div>
+        <h3>Sexagesimal</h3>
+        <mat-form-field>
+          <mat-label>Latitude</mat-label>
+          <input matInput formControlName="latitudeSexagesimal">
+        </mat-form-field>
+        <mat-form-field>
+          <mat-label>Longitude</mat-label>
+          <input matInput formControlName="longitudeSexagesimal">
+        </mat-form-field>
+      </div>
+    </form>
   </mat-card-content>
 </mat-card>

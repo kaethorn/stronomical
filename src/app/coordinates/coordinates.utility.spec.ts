@@ -5,15 +5,7 @@ describe('CoordinatesUtility', () => {
   describe('#toDegrees', () => {
 
     it('converts coordinates to degress', () => {
-      expect(CoordinatesUtility.toDegrees({
-        accuracy: 45,
-        altitude: null,
-        altitudeAccuracy: null,
-        heading: null,
-        latitude: 47.5853312,
-        longitude: 8.3092767,
-        speed: null
-      })).toEqual({
+      expect(CoordinatesUtility.toDegrees(47.5853312, 8.3092767)).toEqual({
         latitude: {
           coordinate: {
             decimal: 47.5853312,

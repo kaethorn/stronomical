@@ -24,16 +24,16 @@ export interface SexagesimalCoordinates {
 
 export class CoordinatesUtility {
 
-  public static toDegrees(coordinates: Coordinates): SexagesimalCoordinates {
+  public static toDegrees(latitude: number, longitude: number): SexagesimalCoordinates {
     return {
       latitude: {
-        coordinate: this.toSexagesimal(coordinates.latitude),
-        orientation: coordinates.latitude >= 0 ?
+        coordinate: this.toSexagesimal(latitude),
+        orientation: latitude >= 0 ?
           SexagesimalOrientation.North : SexagesimalOrientation.South
       },
       longitude: {
-        coordinate: this.toSexagesimal(coordinates.longitude),
-        orientation: coordinates.longitude >= 0 ?
+        coordinate: this.toSexagesimal(longitude),
+        orientation: longitude >= 0 ?
           SexagesimalOrientation.East : SexagesimalOrientation.West
       }
     };

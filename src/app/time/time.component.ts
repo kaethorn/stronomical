@@ -1,4 +1,5 @@
 import { Component, NgZone } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { interval } from 'rxjs';
 
 @Component({
@@ -8,7 +9,11 @@ import { interval } from 'rxjs';
 })
 export class TimeComponent {
 
-  public utc = new Date().toUTCString();
+  public timeForm = new FormGroup({
+    utc: new FormControl({ value: new Date().toUTCString(), disabled: true }),
+    local: new FormControl({ value: new Date().toString(), disabled: true })
+  });
+
 
   constructor(
     private ngZone: NgZone
@@ -16,7 +21,8 @@ export class TimeComponent {
     this.ngZone.runOutsideAngular(() => {
       interval(1000).subscribe(() => {
         this.ngZone.run(() => {
-          this.utc = new Date().toUTCString();
+          this.timeForm.get('utc')?.setValue(new Date().toUTCString());
+          this.timeForm.get('local')?.setValue(new Date().toString());
         });
       });
     });
